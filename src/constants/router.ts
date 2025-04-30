@@ -1,0 +1,9 @@
+export const ROUTER_HOME = "/";
+export const ROUTER_LOGIN = "/pages/LoginForm";
+export const ROUTER_CLIENTES = "/pages/Clientes";
+export const ROUTER_USUARIOS = "/pages/Usuarios";
+export const ROUTER_FINANCEIRO = "/pages/Financeiro";
+export const ROUTER_DASHBOARD = "/pages/Dashboard";
+export const ROUTER_PROFILE = "/pages/Profiles";
+export const ROUTER_REGISTER ="/pages/Register";
+export const ROUTER_ADMIN ="/pages/Admin";
