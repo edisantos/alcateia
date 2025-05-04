@@ -11,7 +11,10 @@ function extractRoles(token: string): string[] {
   try {
      /* eslint-disable  @typescript-eslint/no-explicit-any */
     const decodedToken: { [key: string]: any } = jwtDecode(token);
-    return decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || [];
+    const roles = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+    if(!roles) return [];
+     return Array.isArray(roles) ? roles : [roles];
+    
   } catch (error) {
     console.error("Erro ao decodificar token:", error);
     return [];

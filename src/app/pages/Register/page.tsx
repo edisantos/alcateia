@@ -4,7 +4,11 @@ import RegisterAuth from "../api/Authentication/RegisterAuth";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { ROUTER_LOGIN } from "@/constants/router";
-import { AtSymbolIcon, LockClosedIcon, UserIcon } from "@heroicons/react/16/solid";
+import {
+  AtSymbolIcon,
+  LockClosedIcon,
+  UserIcon,
+} from "@heroicons/react/16/solid";
 import Footer from "@/components/Footer";
 
 const Register = () => {
@@ -12,6 +16,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     primeiroNome: "",
     ultimoNome: "",
+    generosId: "",
     email: "",
     senha: "",
     confirmeSenha: "",
@@ -28,9 +33,12 @@ const Register = () => {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.primeiroNome) newErrors.primeiroNome = "O primeiro nome é obrigatório.";
-    if (!formData.ultimoNome) newErrors.ultimoNome = "O último nome é obrigatório.";
+    if (!formData.primeiroNome)
+      newErrors.primeiroNome = "O primeiro nome é obrigatório.";
+    if (!formData.ultimoNome)
+      newErrors.ultimoNome = "O último nome é obrigatório.";
     if (!formData.email) newErrors.email = "O e-mail é obrigatório.";
+    if (!formData.generosId) newErrors.generosid = "O Genero é obrigatorio";
     if (!formData.senha) newErrors.senha = "A senha é obrigatória.";
     if (formData.senha !== formData.confirmeSenha) {
       newErrors.confirmeSenha = "As senhas não coincidem.";
@@ -60,9 +68,10 @@ const Register = () => {
       } else {
         toast.error(result.message, { position: "top-right", autoClose: 5000 });
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      const message = error instanceof Error ? error.message : "Erro inesperado.";
+      const message =
+        error instanceof Error ? error.message : "Erro inesperado.";
       toast.error(`Ops, houve um erro: ${message}`);
     } finally {
       setIsSubmitting(false);
@@ -72,7 +81,10 @@ const Register = () => {
   return (
     <div className="w-full h-auto">
       <div className="flex justify-center items-center py-5">
-        <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-lg shadow-md w-1/3">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-gray-100 p-6 rounded-lg shadow-md w-1/3"
+        >
           <h2 className="text-2xl font-bold mb-4 text-center">Criar Conta</h2>
           <hr className="py-3" />
           {[
@@ -80,50 +92,88 @@ const Register = () => {
               id: "primeiroNome",
               name: "primeiroNome",
               placeholder: "Primeiro Nome",
-              icon: <UserIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />,
+              icon: (
+                <UserIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+              ),
             },
             {
               id: "ultimoNome",
               name: "ultimoNome",
               placeholder: "Último Nome",
-              icon: <UserIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />,
+              icon: (
+                <UserIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+              ),
             },
             {
               id: "email",
               name: "email",
               placeholder: "E-mail",
               type: "email",
-              icon: <AtSymbolIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />,
+              icon: (
+                <AtSymbolIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+              ),
+            },
+            {
+              id: "generosId",
+              name: "generosId",
+              placeholder: "Selecione o genero",
+              type: "select",
+              icon: (
+                <UserIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+              ),
             },
             {
               id: "senha",
               name: "senha",
               placeholder: "Senha",
               type: "password",
-              icon: <LockClosedIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />,
+              icon: (
+                <LockClosedIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+              ),
             },
             {
               id: "confirmeSenha",
               name: "confirmeSenha",
               placeholder: "Confirme a Senha",
               type: "password",
-              icon: <LockClosedIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />,
+              icon: (
+                <LockClosedIcon className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+              ),
             },
           ].map(({ id, name, placeholder, type = "text", icon }) => (
             <div key={id} className="mb-4 relative">
               {icon}
-              <input
-                type={type}
-                id={id}
-                name={name}
-                className="mt-1 block w-full pl-10 p-2 border border-gray-300 rounded-md focus:ring focus:ring-indigo-200"
-                placeholder={placeholder}
-                aria-label={placeholder}
-                aria-required="true"
-                required
-                onChange={handleChange}
-              />
-              {errors[name] && <p className="text-red-600 text-sm mt-1">{errors[name]}</p>}
+              {type === "select" ? (
+                <select
+                  id={id}
+                  name={name}
+                  value={formData[name as keyof typeof formData]}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, [name]: e.target.value }))
+                  }
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="" disabled hidden>
+                    {placeholder}
+                  </option>
+                  <option value="1">Masculino</option>
+                  <option value="2">Feminino</option>
+                  <option value="3">Outros</option>
+                </select>
+              ) : (
+                <input
+                  id={id}
+                  name={name}
+                  type={type}
+                  placeholder={placeholder}
+                  value={formData[name as keyof typeof formData]}
+                  onChange={handleChange}
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              )}
+              {errors[name] && (
+                <p className="text-red-600 text-sm mt-1">{errors[name]}</p>
+              )}
             </div>
           ))}
           <button
@@ -137,7 +187,6 @@ const Register = () => {
       </div>
       <Footer />
     </div>
-
   );
 };
 

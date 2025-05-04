@@ -33,6 +33,7 @@ const Transition = React.forwardRef(function Transition(
 const Profiles = () => {
   const [profileData, setProfileData] = useState<ProfilesData | null>(null);
   const [isOpeModal, setIsOpenModal] = useState(false);
+  const [isOpeModalCadastrar, setIsOpenModalCadastrar] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fetchBuscarPerfil = async () => {
     try {
@@ -50,6 +51,9 @@ const Profiles = () => {
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
+  };
+  const handleOpenModalCadastrar = () => {
+    setIsOpenModalCadastrar(true);
   };
   const handleClosedModal = () => {
     setIsOpenModal(false);
@@ -127,7 +131,7 @@ const Profiles = () => {
             </div>
           </div>
         ) : (
-          <p className="text-center text-gray-500">Carregando perfil...</p>
+          <p className="text-center text-gray-500">Não há perfil adicionando</p>
         )}
       </div>
       {/* Corpo Principal (Tabela e Botões) */}
@@ -136,13 +140,14 @@ const Profiles = () => {
         <hr />
         <div className="mt-4 mb-4">
           {profileData ? (
-           <button className="w-12 h-12 bg-gray-300 text-white rounded-full flex items-center justify-center" disabled>
+           <button className="w-12 h-12 bg-gray-400 text-white rounded-full flex items-center justify-center" disabled>
            <AddIcon/>
          </button>
 
           ):(
             <Tooltip title="Cadastrar" placement="right-start" arrow>
-            <IconButton sx={{ backgroundColor: "success.main", color: "white", "&:hover": { backgroundColor: "success.dark" } }}>
+            <IconButton onClick={handleOpenModalCadastrar} color="success" className="w-12 h-12 rounded-full flex items-center justify-center"
+            sx={{ backgroundColor: "success.main", color: "white", "&:hover": { backgroundColor: "success.dark" } }}>
             <AddIcon/>
             </IconButton>
             </Tooltip>
@@ -342,6 +347,68 @@ const Profiles = () => {
           </Box>
         </Dialog>
       )}
+      {/* Modal de Cadastro */}
+      <dialog>
+        <Dialog
+          open={isOpeModalCadastrar}
+          onClose={() => setIsOpenModalCadastrar(false)}
+          fullScreen
+          TransitionComponent={Transition}
+        >
+          <Box
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-200 p-6 rounded shadow-lg"
+            style={{ width: 800 }}
+          >
+            <Typography variant="h6" component="h2" textAlign="center">
+              Cadastro de Perfil
+            </Typography>
+            <Divider />
+            <FormControl fullWidth sx={{ m: 1 }}>
+            <Box
+                className="w-24 h-24 rounded-full cursor-pointer overflow-hidden border-2 border-gray-300"
+                onClick={() => document.getElementById("fileInput")?.click()}
+              >
+                
+              </Box>
+              <TextField
+                value={profileData?.nome}
+                fullWidth
+                onChange={handleInputChange}
+                variant="outlined"
+                label="Nome"
+                className="mt-2"
+              />
+            </FormControl>
+            <FormControl fullWidth sx={{ m: 1 }}>
+              <TextField
+                value={profileData?.email}
+                fullWidth
+                onChange={handleInputChange}
+                variant="outlined"
+                label="E-mail"
+                className="mt-2"
+              />
+            </FormControl>
+            <div className="flex justify-end gap-2 mt-4">
+              <Button
+                onClick={() => setIsOpenModalCadastrar(false)}
+                variant="outlined"
+                startIcon={<FaTimes />}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={() => setIsOpenModalCadastrar(false)}
+                variant="contained"
+                startIcon={<FaPen />}
+                color="primary"
+              >
+                Confirmar
+              </Button>
+            </div>
+          </Box>
+        </Dialog>
+      </dialog>
     </div>
   );
 };
